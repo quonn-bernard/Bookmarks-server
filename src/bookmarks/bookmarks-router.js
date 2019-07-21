@@ -5,10 +5,13 @@ const bodyParser = express.json();
 const logger = require('../logger');
 const bookmarksService = require('./bookmarks-service');
 const xss = require('xss');
+
 const serializeNote = bookmark => ({
   ...bookmark,
   name: xss(bookmark.name),
-  content: xss(bookmark.content)
+  content: xss(bookmark.content),
+  author: xss(bookmark.author),
+  type: xss(bookmark.type)
 });
 
 bookmarkRouter
@@ -22,8 +25,9 @@ bookmarkRouter
       .catch(next);
   })
   .post(bodyParser, (req, res, next) => {
-    const { name, content, collection_id } = req.body;
-    const newNote = { name, content, collection_id };
+    const { name, content, collection_id, type, author } = req.body;
+    const newNote = { name, content, collection_id, type, author };
+    newNote.author = author
     bookmarksService.insertNote(
       req.app.get('db'),
       newNote
@@ -68,8 +72,8 @@ bookmarkRouter
       .catch(next);
   })
   .patch(bodyParser, (req, res, next) => {
-    const { name, content, collection_id } = req.body;
-    const bookmarkToUpdate = { name, content, collection_id };
+    const { name, content, collection_id, type, author } = req.body;
+    const bookmarkToUpdate = { name, content, collection_id, type, author };
 
     const numberOfValues = Object.values(bookmarkToUpdate).filter(Boolean).length;
     if (numberOfValues === 0) {
