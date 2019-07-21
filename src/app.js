@@ -10,8 +10,8 @@ const collectionRouter = require('./collections/collections-router');
 const bookmarkRouter = require('./bookmarks/bookmarks-router');
 const collectionsService = require('./collections/collections-service');
 const bookmarksService = require('./bookmarks/bookmarks-service');
+const usersRouter = require('./users/users-router')
 const app = express();
-const { PORT, DB_URL } = require('./config');
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -30,8 +30,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/collections',collectionRouter);
-app.use('/bookmarks',bookmarkRouter);
+app.use('/api/collections',collectionRouter);
+app.use('/api/bookmarks',bookmarkRouter);
+app.use('/api/users', usersRouter)
 
 // TODO: see if this works
 app.get('/', (req, res,next) => {
