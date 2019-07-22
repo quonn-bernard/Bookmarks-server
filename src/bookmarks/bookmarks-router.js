@@ -6,11 +6,11 @@ const logger = require('../logger');
 const bookmarksService = require('./bookmarks-service');
 const xss = require('xss');
 
-const serializeNote = bookmark => ({
+const serializeBookmark = bookmark => ({
   ...bookmark,
   name: xss(bookmark.name),
   content: xss(bookmark.content),
-  author: xss(bookmark.author),
+  author: bookmark.author,
   type: xss(bookmark.type)
 });
 
@@ -20,7 +20,7 @@ bookmarkRouter
     const knexInstance = req.app.get('db');
     bookmarksService.getAllBookmarks(knexInstance)
       .then(bookmarks => {
-        res.json(bookmarks.map(bookmark => serializeNote(bookmark)));
+        res.json(bookmarks.map(bookmark => serializeBookmark(bookmark)));
       })
       .catch(next);
   })
@@ -36,7 +36,7 @@ bookmarkRouter
         res
           .status(201)
           .location(req.originalUrl + `/${bookmark.id}`)
-          .json(serializeNote(bookmark));
+          .json(serializeBookmark(bookmark));
       })
       .catch(next);
   });
@@ -60,7 +60,7 @@ bookmarkRouter
       .catch(next);
   })
   .get((req, res, next) => {
-    return res.json(serializeNote(res.bookmark));
+    return res.json(serializeBookmark(res.bookmark));
   })
   .delete((req, res, next) => {
     const { id } = req.params;
