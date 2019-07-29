@@ -3,4 +3,5 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   API_TOKEN: process.env.API_TOKEN || 'dummy-api-token',
   DB_URL: process.env.DB_URL || 'postgresql://quonn:Aniyab07!@localhost/v-marker-db',
+  JWT_SECRET: process.env.JWT_SECRET || 'bookmarks-client-auth-token',
 }

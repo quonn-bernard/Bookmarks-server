@@ -10,7 +10,9 @@ const collectionRouter = require('./collections/collections-router');
 const bookmarkRouter = require('./bookmarks/bookmarks-router');
 const collectionsService = require('./collections/collections-service');
 const bookmarksService = require('./bookmarks/bookmarks-service');
-const usersRouter = require('./users/users-router')
+const usersRouter = require('./users/users-router');
+const authRouter = require('./auth/auth-router');
+const profileRouter = require('./profile/profile-router');
 const app = express();
 
 const morganOption = (NODE_ENV === 'production')
@@ -32,8 +34,9 @@ app.use((req, res, next) => {
 
 app.use('/api/collections',collectionRouter);
 app.use('/api/bookmarks',bookmarkRouter);
-app.use('/api/users', usersRouter)
-
+app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/profile', profileRouter);
 // TODO: see if this works
 app.get('/', (req, res,next) => {
   const knexInstance = req.app.get('db');

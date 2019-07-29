@@ -5,6 +5,7 @@ const bodyParser = express.json();
 const logger = require('../logger');
 const bookmarksService = require('./bookmarks-service');
 const xss = require('xss');
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const serializeBookmark = bookmark => ({
   ...bookmark,
@@ -43,6 +44,7 @@ bookmarkRouter
 
 bookmarkRouter
   .route('/:id')
+  .all(requireAuth)
   .all((req, res, next) => {
     bookmarksService.getById(
       req.app.get('db'),
@@ -51,7 +53,7 @@ bookmarkRouter
       .then(bookmark => {
         if (!bookmark) {
           return res.status(404).json({
-            error: { message: 'Note doesn\'t exist' }
+            error: { message: 'Bookmark doesn\'t exist' }
           });
         }
         res.bookmark = bookmark;
