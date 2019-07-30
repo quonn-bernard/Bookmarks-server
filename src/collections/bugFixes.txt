@@ -1,0 +1,8 @@
+//Problems & Fixes
+
+//Problem #1
+//Server was returning collection object with 3 keys but I was only able to access 2 of those keys in the client
+
+//Solution #1
+//Object was being serialized before being returned to the client and the serialized function was only returning 2 keys, so I added the missing keys
+//and am now able to see all 3 keys in the client

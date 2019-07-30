@@ -2,7 +2,6 @@
 
 const collectionsService = {
   getAllCollections(knex) {
-      console.log(knex)
     return knex.select('*').from('collections');
   },
 
@@ -18,7 +17,7 @@ const collectionsService = {
     return knex
       .from('collections')
       .select('*')
-      .where('id', id).first();
+      .where('author', id).first();
   },
 
   deleteCollection(knex, id) {

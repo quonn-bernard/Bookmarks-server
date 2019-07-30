@@ -5,11 +5,13 @@ const collectionRouter = express.Router();
 const bodyParser = express.json();
 const logger = require('../logger');
 const collectionsService = require('./collections-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 const xss = require('xss');
 
 const serializeCollection = collection => ({
   id: collection.id,
-  name: xss(collection.name)
+  name: xss(collection.name),
+  author: xss(collection.author)
 });
 
 const serializeBookmark = bookmark => ({
@@ -24,13 +26,16 @@ collectionRouter
     const knexInstance = req.app.get('db');
     collectionsService.getAllCollections(knexInstance)
       .then(collections => {
+        console.log(collections)
         res.json(collections.map(collection => serializeCollection(collection)));
       })
       .catch(next);
   })
-  .post(bodyParser, (req,res,next) =>{
+  .post(requireAuth, bodyParser, (req,res,next) =>{
     const {name} = req.body;
     const newCollection = { name};
+    newCollection.author = req.user.id
+    console.log(req.user.id)
     collectionsService.insertCollection(
       req.app.get('db'),
       newCollection
@@ -79,9 +84,8 @@ collectionRouter
       .catch(next);
   })
   .patch(bodyParser, (req, res, next) => {
-    const { name} = req.body;
-    const collectionToUpdate = { name};
-
+    const {name} = req.body;
+    const collectionToUpdate = {name};
     const numberOfValues = Object.values(collectionToUpdate).filter(Boolean).length;
     if (numberOfValues === 0) {
       return res.status(400).json({

@@ -9,7 +9,6 @@ const ProfileService = {
         .first();
     },
     serializeProfile(profile){
-        console.log(profile)
         return {
             id: profile.id,
             username: xss(profile.username)
