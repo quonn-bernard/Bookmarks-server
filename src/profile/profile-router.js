@@ -11,6 +11,7 @@ profileRouter
     const id = req.user.id;
     ProfileService.getProfile(req.app.get('db'),id)
     .then(profile=> {
+        console.log(profile)
         return res.json(ProfileService.serializeProfile(profile));
     })
     .catch(next)
