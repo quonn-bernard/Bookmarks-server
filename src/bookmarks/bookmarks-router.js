@@ -28,7 +28,7 @@ bookmarkRouter
   .post(bodyParser, (req, res, next) => {
     const { name, content, collection_id, type } = req.body;
     const newNote = { name, content, collection_id, type };
-    // newNote.author = author
+    
     bookmarksService.insertNote(
       req.app.get('db'),
       newNote
